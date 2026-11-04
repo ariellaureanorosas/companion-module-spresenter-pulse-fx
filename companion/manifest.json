@@ -1,0 +1,28 @@
+{
+  "$schema": "../node_modules/@companion-module/base/assets/manifest.schema.json",
+  "type": "connection",
+  "id": "spresenter-pulse-fx",
+  "name": "Spresenter Pulse FX",
+  "shortname": "Pulse FX",
+  "description": "Liga e desliga os efeitos Strobe/Pulse do plugin Pulse FX no Spresenter, com botÃ£o momentÃ¢neo e feedback de estado.",
+  "version": "1.0.4",
+  "license": "MIT",
+  "repository": "git+https://github.com/ariellaureanorosas/companion-module-spresenter-pulse-fx.git",
+  "bugs": "https://github.com/ariellaureanorosas/companion-module-spresenter-pulse-fx/issues",
+  "maintainers": [
+    {
+      "name": "Ariel Laureano Rosas",
+      "email": "ariellaureanorosas@users.noreply.github.com"
+    }
+  ],
+  "legacyIds": [],
+  "runtime": {
+    "type": "node22",
+    "api": "nodejs-ipc",
+    "apiVersion": "2.2.2",
+    "entrypoint": "../dist/main.js"
+  },
+  "manufacturer": "Spresenter",
+  "products": ["Pulse FX"],
+  "keywords": ["strobe", "pulse", "light", "overlay", "worship"]
+}

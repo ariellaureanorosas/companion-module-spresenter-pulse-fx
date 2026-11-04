@@ -1,0 +1,24 @@
+# Dependências e builds
+node_modules/
+dist/
+pkg/
+coverage/
+*.tgz
+
+# Ferramentas / SO
+*.tsbuildinfo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs e ambiente
+*.log
+.env
+.env.local
+.env.*.local
+
+# Editores
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/

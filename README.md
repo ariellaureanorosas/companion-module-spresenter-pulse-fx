@@ -32,8 +32,13 @@ npm run check
 npm run verify     # check + testes + build + manifesto
 ```
 
-O `companion/manifest.json` mantém `version: "0.0.0"` de propósito: o
-`companion-module-build` preenche a versão do `package.json` no pacote final.
+O `companion/manifest.json` acompanha a versão do `package.json` e do
+`package-lock.json`. Mantenha os três iguais ao publicar: o
+`companion-module-build` usa essa versão no pacote final.
+
+O CI roda em todo pull request e em cada push na `master`: formatação/lint,
+testes, build, validação do manifesto e empacotamento. Tags `vX.Y.Z` disparam o
+workflow **Release**, que publica o `.tgz` e o checksum em uma release do GitHub.
 
 ### Pasta de desenvolvimento do Companion
 

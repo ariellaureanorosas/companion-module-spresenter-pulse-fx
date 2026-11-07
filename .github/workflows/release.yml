@@ -1,0 +1,113 @@
+name: Release
+
+# Publica o pacote verificado em uma release do GitHub quando uma tag `v*` é
+# enviada. Também pode ser disparado manualmente, com `dry_run` para validar o
+# fluxo sem criar release.
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag existente (ex.: v1.0.5)"
+        required: true
+        type: string
+      dry_run:
+        description: "Apenas validar e mostrar o pacote (não publica)"
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ inputs.tag || github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    name: Verify
+    uses: ./.github/workflows/verify.yml
+
+  publish:
+    name: Publish release
+    needs: verify
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      actions: read
+
+    env:
+      TAG: ${{ inputs.tag || github.ref_name }}
+      DRY_RUN: ${{ inputs.dry_run && 'true' || 'false' }}
+      GH_TOKEN: ${{ github.token }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.tag || github.ref }}
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+
+      - name: Validate tag format
+        run: |
+          if [[ ! "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::Tag inválida: $TAG (esperado vX.Y.Z)"
+            exit 1
+          fi
+
+      - name: Refuse tags outside master
+        run: |
+          git fetch --no-tags origin master:refs/remotes/origin/master
+          if ! git merge-base --is-ancestor HEAD origin/master; then
+            echo "::error::A tag $TAG não está em master. Releases saem apenas de master."
+            exit 1
+          fi
+
+      - name: Download distributable
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: spresenter-pulse-fx-pkg
+          path: pkg
+
+      - name: Verify checksum of downloaded package
+        run: cd pkg && sha256sum -c ./*.sha256
+
+      - name: Show what would be published
+        if: env.DRY_RUN == 'true'
+        run: |
+          echo "tag:     $TAG"
+          echo "arquivos:"
+          ls -lh pkg
+
+      - name: Upload dry-run artifact
+        if: env.DRY_RUN == 'true'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: release-dry-run
+          path: |
+            pkg/*.tgz
+            pkg/checksums.sha256
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Publish
+        if: env.DRY_RUN != 'true'
+        run: |
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" pkg/*.tgz pkg/checksums.sha256 --clobber
+          else
+            gh release create "$TAG" pkg/*.tgz pkg/checksums.sha256 \
+              --verify-tag \
+              --title "Spresenter Pulse FX ${TAG#v}" \
+              --generate-notes
+          fi
+          gh release view "$TAG" --json url,assets --jq '{url, assets: [.assets[].name]}'

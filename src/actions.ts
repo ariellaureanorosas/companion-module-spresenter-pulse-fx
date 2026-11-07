@@ -142,7 +142,7 @@ function effectOptions(self: ModuleInstance): SomeCompanionActionInputField<keyo
       clampValues: true,
       isVisibleExpression: '$(options:mode) == "strobe"',
     },
-    // Espessura/Suavização só para Vinheta/Moldura e apenas Strobe/Pulse
+    // Espessura/Suavização só para Vinheta/Moldura, em Strobe, Pulse e Hit
     {
       type: 'number',
       id: 'thickness',
@@ -151,7 +151,7 @@ function effectOptions(self: ModuleInstance): SomeCompanionActionInputField<keyo
       min: 0,
       max: 100,
       clampValues: true,
-      isVisibleExpression: '$(options:target) != "full" && $(options:mode) != "hit"',
+      isVisibleExpression: '$(options:target) != "full"',
     },
     {
       type: 'number',
@@ -161,7 +161,7 @@ function effectOptions(self: ModuleInstance): SomeCompanionActionInputField<keyo
       min: 0,
       max: 100,
       clampValues: true,
-      isVisibleExpression: '$(options:target) != "full" && $(options:mode) != "hit"',
+      isVisibleExpression: '$(options:target) != "full"',
     },
     // Duração só para Hit
     {

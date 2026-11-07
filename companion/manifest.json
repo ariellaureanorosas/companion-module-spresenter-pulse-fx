@@ -5,7 +5,7 @@
   "name": "Spresenter Pulse FX",
   "shortname": "Pulse FX",
   "description": "Liga e desliga os efeitos Strobe/Pulse do plugin Pulse FX no Spresenter, com botÃ£o momentÃ¢neo e feedback de estado.",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "license": "MIT",
   "repository": "git+https://github.com/ariellaureanorosas/companion-module-spresenter-pulse-fx.git",
   "bugs": "https://github.com/ariellaureanorosas/companion-module-spresenter-pulse-fx/issues",

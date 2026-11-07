@@ -35,6 +35,10 @@ Na aba **Presets**, use:
 - **Pulse FX → Segurar para acender → Strobe** (ou **Pulse**): aperta → liga, solta → desliga.
 - **Pulse FX → Segurar para acender → Hit (momentâneo)**: aperta → dispara um flash único (dura o `decayMs`), solta → não faz nada (o hit para sozinho).
 
+Vinheta e Moldura podem ser usadas com Strobe, Pulse e Hit. Ao escolher uma
+delas em **Área**, os campos **Espessura** e **Suavização** aparecem para ajustar
+o desenho — inclusive no Hit.
+
 Os presets **Segurar para acender** já vêm com:
 
 - **Apertar:** ação *Ligar efeito contínuo*.

@@ -82,6 +82,28 @@ describe('start', () => {
       decayMs: 500,
     });
   });
+
+  it('leva vinheta e moldura também no hit', () => {
+    expect(
+      buildStartPayload({
+        ...START,
+        mode: 'hit',
+        target: 'vignette',
+        thickness: 70,
+        softness: 25,
+      }),
+    ).toMatchObject({
+      mode: 'hit',
+      target: 'vignette',
+      thickness: 70,
+      softness: 25,
+      decayMs: 320,
+    });
+
+    expect(
+      buildStartPayload({ ...START, mode: 'hit', target: 'frame', thickness: 12, softness: 90 }),
+    ).toMatchObject({ mode: 'hit', target: 'frame', thickness: 12, softness: 90 });
+  });
 });
 
 describe('trava', () => {
